@@ -1,0 +1,31 @@
+{
+  "name": "tankerkoenig-js",
+  "version": "1.0.0",
+  "description": "JavaScript API client for the Tankerkönig gas prices API",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "tsx test.ts",
+    "prepublishOnly": "tsc"
+  },
+  "keywords": ["tankerkoenig", "gas", "fuel", "prices", "germany", "api"],
+  "author": "Creeperkatze",
+  "license": "AGPL-3.0-only",
+  "packageManager": "pnpm@10.27.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
