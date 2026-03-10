@@ -13,7 +13,8 @@
         "dist/"
     ],
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "test": "node --import tsx/esm --test src/client.test.ts"
     },
     "keywords": [
         "tankerkoenig",
@@ -30,6 +31,7 @@
         "node": ">=18"
     },
     "devDependencies": {
+        "@types/node": "^25.4.0",
         "tsx": "^4.19.3",
         "typescript": "^5.8.2"
     }

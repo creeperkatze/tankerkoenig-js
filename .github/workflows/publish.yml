@@ -1,8 +1,9 @@
 name: Publish
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   id-token: write
@@ -29,4 +30,6 @@ jobs:
 
       - run: pnpm build
 
-      - run: pnpm publish --no-git-checks
+      - run: pnpm test
+
+      - run: pnpm publish --no-git-checks --provenance
