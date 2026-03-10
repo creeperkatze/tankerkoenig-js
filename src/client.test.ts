@@ -60,45 +60,27 @@ describe("TankerkoenigClient#list", () => {
     const client = new TankerkoenigClient("test-key");
 
     it("throws TypeError when lat is not a number", async () => {
-        await assert.rejects(
-            () => client.list({ lat: "bad" as unknown as number, lng: 13, rad: 5, type: "e5" }),
-            TypeError,
-        );
+        await assert.rejects(() => client.list({ lat: "bad" as unknown as number, lng: 13, rad: 5, type: "e5" }), TypeError);
     });
 
     it("throws TypeError when lng is not a number", async () => {
-        await assert.rejects(
-            () => client.list({ lat: 52, lng: "bad" as unknown as number, rad: 5, type: "e5" }),
-            TypeError,
-        );
+        await assert.rejects(() => client.list({ lat: 52, lng: "bad" as unknown as number, rad: 5, type: "e5" }), TypeError);
     });
 
     it("throws RangeError when rad is 0", async () => {
-        await assert.rejects(
-            () => client.list({ lat: 52, lng: 13, rad: 0, type: "e5" }),
-            RangeError,
-        );
+        await assert.rejects(() => client.list({ lat: 52, lng: 13, rad: 0, type: "e5" }), RangeError);
     });
 
     it("throws RangeError when rad exceeds 25", async () => {
-        await assert.rejects(
-            () => client.list({ lat: 52, lng: 13, rad: 26, type: "e5" }),
-            RangeError,
-        );
+        await assert.rejects(() => client.list({ lat: 52, lng: 13, rad: 26, type: "e5" }), RangeError);
     });
 
     it("throws TypeError for invalid fuel type", async () => {
-        await assert.rejects(
-            () => client.list({ lat: 52, lng: 13, rad: 5, type: "kerosene" as never }),
-            TypeError,
-        );
+        await assert.rejects(() => client.list({ lat: 52, lng: 13, rad: 5, type: "kerosene" as never }), TypeError);
     });
 
     it("throws TypeError for invalid sort option", async () => {
-        await assert.rejects(
-            () => client.list({ lat: 52, lng: 13, rad: 5, type: "e5", sort: "name" as never }),
-            TypeError,
-        );
+        await assert.rejects(() => client.list({ lat: 52, lng: 13, rad: 5, type: "e5", sort: "name" as never }), TypeError);
     });
 
     it("returns stations array on success", async () => {
@@ -189,34 +171,28 @@ describe("TankerkoenigClient#complaint", () => {
     const client = new TankerkoenigClient("test-key");
 
     it("throws TypeError for empty id", async () => {
-        await assert.rejects(
-            () => client.complaint({ id: "", type: "wrongPriceE5" }),
-            TypeError,
-        );
+        await assert.rejects(() => client.complaint({ id: "", type: "wrongPriceE5" }), TypeError);
     });
 
     it("throws TypeError for invalid complaint type", async () => {
-        await assert.rejects(
-            () => client.complaint({ id: "abc", type: "badType" as never }),
-            TypeError,
-        );
+        await assert.rejects(() => client.complaint({ id: "abc", type: "badType" as never }), TypeError);
     });
 
-    it("resolves on success", async () => {
+    it("resolves on success for no-correction type", async () => {
         mockFetch({ ok: true });
-        await assert.doesNotReject(() => client.complaint({ id: "abc", type: "wrongPriceE5" }));
+        await assert.doesNotReject(() => client.complaint({ id: "abc", type: "wrongStatusClosed" }));
     });
 
     it("sends required fields in POST body", async () => {
         mockFetch({ ok: true });
-        await client.complaint({ id: "station-1", type: "wrongPriceE10" });
+        await client.complaint({ id: "station-1", type: "wrongPriceE10", correction: 1.499 });
         const body = new URLSearchParams(fetchCalls[0]!.init?.body as string);
         assert.equal(body.get("id"), "station-1");
         assert.equal(body.get("type"), "wrongPriceE10");
         assert.equal(body.get("apikey"), "test-key");
     });
 
-    it("includes optional correction and ts when provided", async () => {
+    it("includes correction and ts when provided", async () => {
         mockFetch({ ok: true });
         await client.complaint({ id: "station-1", type: "wrongPriceDiesel", correction: 1.599, ts: 1700000000 });
         const body = new URLSearchParams(fetchCalls[0]!.init?.body as string);
@@ -224,12 +200,53 @@ describe("TankerkoenigClient#complaint", () => {
         assert.equal(body.get("ts"), "1700000000");
     });
 
-    it("does not include correction/ts when omitted", async () => {
+    it("does not include correction/ts when omitted for no-correction type", async () => {
         mockFetch({ ok: true });
-        await client.complaint({ id: "station-1", type: "wrongPriceE5" });
+        await client.complaint({ id: "station-1", type: "wrongStatusOpen" });
         const body = new URLSearchParams(fetchCalls[0]!.init?.body as string);
         assert.equal(body.get("correction"), null);
         assert.equal(body.get("ts"), null);
+    });
+
+    it("throws TypeError when correction provided for wrongStatusOpen", async () => {
+        await assert.rejects(() => client.complaint({ id: "abc", type: "wrongStatusOpen", correction: "oops" }), TypeError);
+    });
+
+    it("throws TypeError when correction provided for wrongStatusClosed", async () => {
+        await assert.rejects(() => client.complaint({ id: "abc", type: "wrongStatusClosed", correction: "oops" }), TypeError);
+    });
+
+    it("throws TypeError when price correction is not a number", async () => {
+        await assert.rejects(() => client.complaint({ id: "abc", type: "wrongPriceE5", correction: "1.23" as never }), TypeError);
+    });
+
+    it("throws TypeError when price correction is not positive", async () => {
+        await assert.rejects(() => client.complaint({ id: "abc", type: "wrongPriceDiesel", correction: -1 }), TypeError);
+    });
+
+    it("throws TypeError when string correction is a number", async () => {
+        await assert.rejects(() => client.complaint({ id: "abc", type: "wrongPetrolStationPostcode", correction: 12345 as never }), TypeError);
+    });
+
+    it("throws TypeError when string correction is empty", async () => {
+        await assert.rejects(() => client.complaint({ id: "abc", type: "wrongPetrolStationName", correction: "   " }), TypeError);
+    });
+
+    it("resolves for location with valid coordinate string", async () => {
+        mockFetch({ ok: true });
+        await assert.doesNotReject(() => client.complaint({ id: "abc", type: "wrongPetrolStationLocation", correction: "52.29162,10.06117" }));
+    });
+
+    it("throws TypeError when location correction is not a string", async () => {
+        await assert.rejects(() => client.complaint({ id: "abc", type: "wrongPetrolStationLocation", correction: 52.29 as never }), TypeError);
+    });
+
+    it("throws TypeError when location correction has wrong format", async () => {
+        await assert.rejects(() => client.complaint({ id: "abc", type: "wrongPetrolStationLocation", correction: "not,a,coord" }), TypeError);
+    });
+
+    it("throws TypeError when ts is not a positive integer", async () => {
+        await assert.rejects(() => client.complaint({ id: "abc", type: "wrongStatusClosed", ts: 1.5 }), TypeError);
     });
 });
 
