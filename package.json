@@ -24,6 +24,10 @@
         "germany",
         "api"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/creeperkatze/tankerkoenig-js"
+    },
     "author": "Creeperkatze",
     "license": "AGPL-3.0-only",
     "packageManager": "pnpm@10.27.0",
