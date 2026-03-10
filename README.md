@@ -2,13 +2,16 @@
 
 A JavaScript API client for the [Tankerkönig](https://creativecommons.tankerkoenig.de/) gas prices API. Zero dependencies, requires Node.js 18+.
 
-## Installation
+## 📦 Installation
 
 ```sh
 npm install tankerkoenig-js
+pnpm add tankerkoenig-js
+yarn add tankerkoenig-js
+bun add tankerkoenig-js
 ```
 
-## Usage
+## 🚀 Usage
 
 ```ts
 import TankerkoenigClient from 'tankerkoenig-js';
@@ -18,7 +21,7 @@ const client = new TankerkoenigClient('your-api-key');
 
 You can get an API key at [creativecommons.tankerkoenig.de](https://creativecommons.tankerkoenig.de/).
 
-## API
+## 📖 API
 
 ### `client.list(options)` — Radius search
 
@@ -75,7 +78,7 @@ await client.complaint({
 
 Available complaint types: `wrongPetrolStationName`, `wrongStatusOpen`, `wrongStatusClosed`, `wrongPriceE5`, `wrongPriceE10`, `wrongPriceDiesel`, `wrongPetrolStationBrand`, `wrongPetrolStationStreet`, `wrongPetrolStationHouseNumber`, `wrongPetrolStationPostcode`, `wrongPetrolStationPlace`, `wrongPetrolStationLocation`.
 
-## Error handling
+## ⚠️ Error handling
 
 All methods throw a `TankerkoenigError` on API errors (`ok: false`) or non-2xx HTTP responses.
 
