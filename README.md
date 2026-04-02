@@ -23,7 +23,7 @@ You can get an API key at [creativecommons.tankerkoenig.de](https://creativecomm
 
 ## 📖 API
 
-### `client.list(options)` — Radius search
+### `client.list(options)`: Radius search
 
 Returns all stations within a given radius, with current prices.
 
@@ -37,7 +37,7 @@ const stations = await client.list({
 });
 ```
 
-### `client.prices(ids)` — Bulk price check
+### `client.prices(ids)`: Bulk price check
 
 Returns current prices for up to 10 stations by ID.
 
@@ -53,7 +53,7 @@ const prices = await client.prices([
 // }
 ```
 
-### `client.detail(id)` — Station details
+### `client.detail(id)`: Station details
 
 Returns full station info including opening times.
 
@@ -64,7 +64,7 @@ station.openingTimes; // [{ text: 'Mo-Fr', start: '06:00:00', end: '22:30:00' },
 station.overrides;    // ['13.04.2017, 15:00:00 - 13.11.2017, 15:00:00: geschlossen']
 ```
 
-### `client.complaint(options)` — Report incorrect data
+### `client.complaint(options)`: Report incorrect data
 
 Reports wrong station data to the MTS-K via the Tankerkönig API.
 
