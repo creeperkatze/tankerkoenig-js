@@ -2,6 +2,13 @@
 
 A JavaScript API client for the [Tankerkönig](https://creativecommons.tankerkoenig.de/) gas prices API. Zero dependencies, requires Node.js 18+.
 
+[![NPM Version](https://img.shields.io/npm/v/tankerkoenig-js)](https://www.npmjs.com/package/tankerkoenig-js)
+[![NPM Downloads](https://img.shields.io/npm/dt/tankerkoenig-js)](https://www.npmjs.com/package/tankerkoenig-js)
+![GitHub Branch Check Runs](https://img.shields.io/github/check-runs/creeperkatze/tankerkoenig-js/main)
+![GitHub Issues](https://img.shields.io/github/issues/creeperkatze/tankerkoenig-js)
+![GitHub Pull Requests](https://img.shields.io/github/issues-pr/creeperkatze/tankerkoenig-js)
+![GitHub Repo stars](https://img.shields.io/github/stars/creeperkatze/tankerkoenig-js?style=flat)
+
 ## 📦 Installation
 
 ```sh
@@ -92,6 +99,14 @@ try {
     console.error(err.message);
   }
 }
+```
+
+## 👨‍💻 Development
+
+```sh
+pnpm build
+
+pnpm test
 ```
 
 ## 📜 License
