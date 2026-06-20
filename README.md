@@ -10,6 +10,8 @@ A JavaScript API client for the [Tankerkönig](https://creativecommons.tankerkoe
 ![GitHub Pull Requests](https://img.shields.io/github/issues-pr/creeperkatze/tankerkoenig-js)
 ![GitHub Repo stars](https://img.shields.io/github/stars/creeperkatze/tankerkoenig-js?style=flat)
 
+[📝 Changelog](https://github.com/creeperkatze/tankerkoenig-js/releases)
+
 ## 📦 Installation
 
 ```sh
