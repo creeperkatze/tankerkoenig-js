@@ -3,15 +3,18 @@
     "version": "1.0.15",
     "description": "JavaScript API client for the Tankerkönig gas prices API",
     "type": "module",
+    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
             "default": "./dist/index.js"
-        }
+        },
+        "./package.json": "./package.json"
     },
     "files": [
         "dist/"
     ],
+    "sideEffects": false,
     "scripts": {
         "build": "tsc",
         "test": "vitest run",
@@ -31,6 +34,9 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/creeperkatze/tankerkoenig-js"
+    },
+    "bugs": {
+        "url": "https://github.com/creeperkatze/tankerkoenig-js/issues"
     },
     "author": "Creeperkatze",
     "license": "AGPL-3.0-only",
