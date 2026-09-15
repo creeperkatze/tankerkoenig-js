@@ -1,6 +1,6 @@
 {
     "name": "tankerkoenig-js",
-    "version": "1.0.17",
+    "version": "1.0.18",
     "description": "JavaScript API client for the Tankerkönig gas prices API",
     "type": "module",
     "types": "./dist/index.d.ts",
