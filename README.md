@@ -112,4 +112,4 @@ pnpm test
 
 ## 📜 License
 
-AGPL-3.0
+MIT
