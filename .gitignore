@@ -1,4 +1,8 @@
 node_modules
-dist
+/coverage
+/dist
 .env
-coverage
+website/.vitepress/.temp
+website/.vitepress/cache
+website/.vitepress/dist
+website/api

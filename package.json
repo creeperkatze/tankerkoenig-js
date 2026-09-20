@@ -2,6 +2,7 @@
     "name": "tankerkoenig-js",
     "version": "1.0.18",
     "description": "JavaScript API client for the Tankerkönig gas prices API",
+    "homepage": "https://tankerkoenig-js.creeperkatze.dev",
     "type": "module",
     "types": "./dist/index.d.ts",
     "exports": {
@@ -17,6 +18,12 @@
     "sideEffects": false,
     "scripts": {
         "build": "tsc",
+        "website:api": "typedoc --options typedoc.json",
+        "website:dev": "concurrently -n typedoc,vitepress -c yellow,cyan \"typedoc --options typedoc.json --watch\" \"vitepress dev website\"",
+        "website:build": "pnpm website:api && vitepress build website",
+        "website:preview": "vitepress preview website",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
         "test": "vitest run",
         "test:coverage": "vitest run --coverage",
         "release:patch": "pnpm version patch && git push && git push --tags",
@@ -45,9 +52,18 @@
         "node": ">=18"
     },
     "devDependencies": {
-        "@types/node": "^25.9.6",
-        "@vitest/coverage-v8": "^2.1.9",
-        "typescript": "^5.9.3",
-        "vitest": "^2.1.9"
+        "@eslint/js": "^10.0.1",
+        "@lucide/vue": "^1.46.0",
+        "@types/node": "^26.5.1",
+        "@vitest/coverage-v8": "^3.2.7",
+        "concurrently": "^10.0.5",
+        "eslint": "^10.10.0",
+        "globals": "^17.12.0",
+        "typedoc": "^0.28.20",
+        "typedoc-plugin-markdown": "^4.13.0",
+        "typescript": "^6.0.3",
+        "typescript-eslint": "^8.70.0",
+        "vitepress": "^1.6.4",
+        "vitest": "^3.2.7"
     }
 }

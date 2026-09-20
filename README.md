@@ -4,11 +4,16 @@ A JavaScript API client for the [Tankerkönig](https://creativecommons.tankerkoe
 
 [![NPM Version](https://img.shields.io/npm/v/tankerkoenig-js)](https://www.npmjs.com/package/tankerkoenig-js)
 [![NPM Downloads](https://img.shields.io/npm/dt/tankerkoenig-js)](https://www.npmjs.com/package/tankerkoenig-js)
-![GitHub Branch Check Runs](https://img.shields.io/github/check-runs/creeperkatze/tankerkoenig-js/main)
-![Codecov](https://img.shields.io/codecov/c/github/creeperkatze/tankerkoenig-js)
-![GitHub Issues](https://img.shields.io/github/issues/creeperkatze/tankerkoenig-js)
-![GitHub Pull Requests](https://img.shields.io/github/issues-pr/creeperkatze/tankerkoenig-js)
-![GitHub Repo stars](https://img.shields.io/github/stars/creeperkatze/tankerkoenig-js?style=flat)
+[![GitHub Branch Check Runs](https://img.shields.io/github/check-runs/creeperkatze/tankerkoenig-js/main)](https://github.com/creeperkatze/tankerkoenig-js/actions)
+[![Codecov](https://img.shields.io/codecov/c/github/creeperkatze/tankerkoenig-js)](https://codecov.io/github/creeperkatze/tankerkoenig-js)
+[![GitHub Issues](https://img.shields.io/github/issues/creeperkatze/tankerkoenig-js)](https://github.com/creeperkatze/tankerkoenig-js/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/creeperkatze/tankerkoenig-js)](https://github.com/creeperkatze/tankerkoenig-js/pulls)
+[![GitHub Repo stars](https://img.shields.io/github/stars/creeperkatze/tankerkoenig-js?style=flat)](https://github.com/creeperkatze/tankerkoenig-js/stargazers)
+
+[📚 Docs](https://tankerkoenig-js.creeperkatze.dev/) •
+[🚀 Getting Started](https://tankerkoenig-js.creeperkatze.dev/guide/getting-started) •
+[📖 API Reference](https://tankerkoenig-js.creeperkatze.dev/api) •
+[📝 Changelog](https://github.com/creeperkatze/tankerkoenig-js/releases)
 
 ## 📦 Installation
 
@@ -25,79 +30,48 @@ bun add tankerkoenig-js
 import TankerkoenigClient from 'tankerkoenig-js';
 
 const client = new TankerkoenigClient('your-api-key');
+
+const stations = await client.list({
+  lat: 52.521,
+  lng: 13.438,
+  rad: 5,
+  type: 'diesel',
+});
 ```
 
 You can get an API key at [creativecommons.tankerkoenig.de](https://creativecommons.tankerkoenig.de/).
 
 ## 📖 API
 
-### `client.list(options)`: Radius search
-
-Returns all stations within a given radius, with current prices.
+### `new TankerkoenigClient(apiKey)`
 
 ```ts
-const stations = await client.list({
-  lat: 52.521,   // latitude
-  lng: 13.438,   // longitude
-  rad: 5,        // radius in km (max 25)
-  type: 'diesel', // 'e5' | 'e10' | 'diesel' | 'all'
-  sort: 'price', // 'price' | 'dist' (optional, default: 'dist')
-});
+const client = new TankerkoenigClient('your-api-key');
 ```
 
-### `client.prices(ids)`: Bulk price check
+### Methods
 
-Returns current prices for up to 10 stations by ID.
+- `client.list(options)` - radius search, returns stations with current prices
+- `client.prices(ids)` - bulk price check for up to 10 stations
+- `client.detail(id)` - full station info including opening times
+- `client.complaint(options)` - report incorrect station data
 
-```ts
-const prices = await client.prices([
-  '4429a7d9-fb2d-4c29-8cfe-2ca90323f9f8',
-  '446bdcf5-9f75-47fc-9cfa-2c3d6fda1c3b',
-]);
+See the [guide](https://tankerkoenig-js.creeperkatze.dev/guide/getting-started) and [API reference](https://tankerkoenig-js.creeperkatze.dev/api) for details.
 
-// {
-//   '4429a7d9-...': { status: 'open', e5: 1.409, e10: 1.389, diesel: 1.129 },
-//   '446bdcf5-...': { status: 'closed' },
-// }
-```
+## ⚠️ Error Handling
 
-### `client.detail(id)`: Station details
-
-Returns full station info including opening times.
+All request and API errors are thrown as `TankerkoenigError`.
 
 ```ts
-const station = await client.detail('24a381e3-0d72-416d-bfd8-b2f65f6e5802');
+import TankerkoenigClient, { TankerkoenigError } from 'tankerkoenig-js';
 
-station.openingTimes; // [{ text: 'Mo-Fr', start: '06:00:00', end: '22:30:00' }, ...]
-station.overrides;    // ['13.04.2017, 15:00:00 - 13.11.2017, 15:00:00: geschlossen']
-```
-
-### `client.complaint(options)`: Report incorrect data
-
-Reports wrong station data to the MTS-K via the Tankerkönig API.
-
-```ts
-await client.complaint({
-  id: 'station-uuid',
-  type: 'wrongPriceDiesel',
-  correction: 1.234,
-});
-```
-
-Available complaint types: `wrongPetrolStationName`, `wrongStatusOpen`, `wrongStatusClosed`, `wrongPriceE5`, `wrongPriceE10`, `wrongPriceDiesel`, `wrongPetrolStationBrand`, `wrongPetrolStationStreet`, `wrongPetrolStationHouseNumber`, `wrongPetrolStationPostcode`, `wrongPetrolStationPlace`, `wrongPetrolStationLocation`.
-
-## ⚠️ Error handling
-
-All methods throw a `TankerkoenigError` on API errors (`ok: false`) or non-2xx HTTP responses.
-
-```ts
-import { TankerkoenigClient, TankerkoenigError } from 'tankerkoenig-js';
+const client = new TankerkoenigClient('your-api-key');
 
 try {
-  const stations = await client.list({ ... });
-} catch (err) {
-  if (err instanceof TankerkoenigError) {
-    console.error(err.message);
+  await client.detail('station-id');
+} catch (error) {
+  if (error instanceof TankerkoenigError) {
+    console.error(error.message);
   }
 }
 ```
@@ -109,6 +83,12 @@ pnpm build
 
 pnpm test
 ```
+
+## 🤝 Contributing
+
+Contributions are always welcome!
+
+Please ensure you run `pnpm lint:fix` before opening a pull request.
 
 ## 📜 License
 
